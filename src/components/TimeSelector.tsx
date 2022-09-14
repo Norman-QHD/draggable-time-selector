@@ -96,9 +96,9 @@ class TimeSelector extends React.Component<IProp, IState> {
             this.save.moving = true;
 
             //region 计算鼠标角度
-            var x = e.clientX - this.save.center.x;
-            var y = e.clientY - this.save.center.y;
-            var currentAngle = this._constValue.R2D * Math.atan2(x, -y);
+            const x = e.clientX - this.save.center.x;
+            const y = e.clientY - this.save.center.y;
+            const currentAngle = this._constValue.R2D * Math.atan2(x, -y);
             let currentAngle360 = currentAngle;
             if (currentAngle < 0) {
                 currentAngle360 = 180 - (0 - currentAngle) + 180;
@@ -321,9 +321,9 @@ class TimeSelector extends React.Component<IProp, IState> {
     //重新获取和保存中心点.在窗体改变大小或者是父级改变了大小时候要做的.其他的时间点和指针都围绕中心点进行旋转.
     getAndSaveCenterFunc = () => {
         //region  点击的时候获取表盘的中心.这样的话 方便该插件在父级位置改变或者是在窗体大小改变的时候再次获取中心保证表盘中心位置的正确性
-        var c = document.getElementById('centerDom')
+        const c = document.getElementById('centerDom')
         if (c) {
-            var centerPoint = findDOMNode(c);
+            const centerPoint = findDOMNode(c);
             if (centerPoint && centerPoint instanceof Element) {
                 // console.log('centerPoint', centerPoint);
                 let bound = centerPoint.getBoundingClientRect();
@@ -422,7 +422,7 @@ class TimeSelector extends React.Component<IProp, IState> {
         }
         //endregion
         //region 五分钟的元素dom
-        let fiveMDoms = [];
+        let fiveMinutePointDOMs = [];
         let fiveMarkWidth = 4;
         let fiveMarkHeight = 8;
         let fiveMarkOffsetX = (clockSize - fiveMarkWidth) / 2;
@@ -443,13 +443,13 @@ class TimeSelector extends React.Component<IProp, IState> {
                     transform: 'rotateZ(' + i * 30 + 'deg) translateY(-' + (fiveMarkOffsetY - 3) + 'px)',
                 }
             //endregion
-            fiveMDoms.push(
+            fiveMinutePointDOMs.push(
                 <div style={fiveStyle} key={'five' + i}></div>
             )
         }
         //endregion
         //region 一分钟的元素dom
-        let oneMDoms = [];
+        let oneMinutePointDOMs = [];
         let oneMarkWidth = 2;
         let oneMarkHeight = 4;
         let oneMarkOffsetX = (clockSize - oneMarkWidth) / 2;
@@ -470,7 +470,7 @@ class TimeSelector extends React.Component<IProp, IState> {
                     transform: 'rotateZ(' + i * 6 + 'deg) translateY(-' + (oneMarkOffsetY - 3) + 'px)',
                 }
             //endregion
-            oneMDoms.push(
+            oneMinutePointDOMs.push(
                 <div style={oneStyle} key={'one' + i}></div>
             )
         }
@@ -622,8 +622,8 @@ class TimeSelector extends React.Component<IProp, IState> {
                          style={clockStyle}
                     >
                         {quartersDom}
-                        {fiveMDoms}
-                        {oneMDoms}
+                        {fiveMinutePointDOMs}
+                        {oneMinutePointDOMs}
 
 
                         <div className={classes.pointer} style={hourStyle}
