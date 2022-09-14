@@ -222,6 +222,7 @@ class TimeSelector extends React.Component<IProp,IState> {
 //endregion
 //region 获取小时或者分钟的选择文字集合
   private getSelectorDom(
+      type:string,
       start:number,
       end:number,
       colCount:number,
@@ -261,27 +262,30 @@ class TimeSelector extends React.Component<IProp,IState> {
           {
             text = ''+index;
           }
-          let div = <div style={gs}>
-            <div style={realGridContentStyle}
-                 onMouseEnter={() => {
-                   setHoverItemFunc(''+i+'.'+ j);
-                 }}
-                 onMouseLeave={() => {
-                   setHoverItemFunc(undefined);
-                 }}
-                 onClick={()=>{
-                   if (selectCallBack)
-                   {
-                     selectCallBack(index)
-                   }
-                 }}
-            >
-              {text}
-            </div>
-          </div>;
+          let gridKey = type+'-col-'+j;
+          let div = (
+              <div style={gs} key={gridKey}>
+                  <div style={realGridContentStyle}
+                       onMouseEnter={() => {
+                           setHoverItemFunc('' + i + '.' + j);
+                       }}
+                       onMouseLeave={() => {
+                           setHoverItemFunc(undefined);
+                       }}
+                       onClick={() => {
+                           if (selectCallBack) {
+                               selectCallBack(index)
+                           }
+                       }}
+                  >
+                      {text}
+                  </div>
+              </div>
+          );
           girds.push(div)
         }
-        let row = <div style={rs}>{girds}</div>
+        const rowKey = type + '-row-' + i;
+        let row = <div style={rs} key={rowKey}>{girds}</div>
         ret.push(row);
       }
       return ret;
@@ -344,6 +348,8 @@ class TimeSelector extends React.Component<IProp,IState> {
   }
   //当组件加载完毕后,如果没有中心点,设置中心点
   componentDidMount() {
+
+      console.log('时间选择组件已经加载,保存的内容:', this.save)
     if (!this.save.center) {
       if (this.props.time)
       {
@@ -541,7 +547,6 @@ class TimeSelector extends React.Component<IProp,IState> {
         backgroundColor: '#7bc0db',
         transform: 'rotateZ(' + minuteAngle + 'deg) translateY(-' + ((minutePointerLong / 2) - minutePointerLong * 0.1) + 'px)',
       }
-
     //是不是中午
     let isNoon = time.hour ===0 && round ===1;
     let hourText = ('' + (isNoon ? 12:time.hour)).padStart(2, '0');
@@ -636,8 +641,10 @@ class TimeSelector extends React.Component<IProp,IState> {
                style={clockStyle}
           >
             {quartersDom}
-            {fiveMDoms}
-            {oneMDoms}
+              {fiveMDoms}
+              {oneMDoms}
+
+
             <div className={classes.pointer} style={hourStyle}
                  onMouseDown={() => {
                    this.getAndSaveCenterFunc();
@@ -673,7 +680,7 @@ class TimeSelector extends React.Component<IProp,IState> {
             <div>{JSON.stringify(this.save)}</div>
           </div>
           <div id={'小时选择区域'} hidden={showingSelector!=='hour'} className={classes.slowIn} style={hourSelectorStyle}>
-            {this.getSelectorDom(0,12,3,4, hoverSelectorItem, setHoverSelectorItem,
+            {this.getSelectorDom('hour',0,12,3,4, hoverSelectorItem, setHoverSelectorItem,
               (selectedIndex:number)=>
               {
                 let newTime = {...this.save.lastUpdateTime, hour:selectedIndex};
@@ -690,7 +697,7 @@ class TimeSelector extends React.Component<IProp,IState> {
             )}
           </div>
           <div id={'分钟选择区域'} hidden={showingSelector!=='minute'} className={classes.slowIn} style={minuteSelectorStyle}>
-            {this.getSelectorDom(0,60,10,6, hoverSelectorItem, setHoverSelectorItem,
+            {this.getSelectorDom('minute',0,60,10,6, hoverSelectorItem, setHoverSelectorItem,
               (selectedIndex)=>
               {
                 let newTime = {...this.save.lastUpdateTime, minute:selectedIndex};
